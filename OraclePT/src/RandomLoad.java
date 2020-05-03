@@ -94,9 +94,6 @@ public class RandomLoad {
 					pstmt.setInt(6,  OraRandom.randomUniformInt(1600));
 					pstmt.setInt(7, OraRandom.randomUniformInt(3200));
 					pstmt.setInt(8,  OraRandom.randomUniformInt(6400));
-				
-					
-					pstmt.executeUpdate();
 					pstmt.addBatch();
 					if (i%10000 == 0) {
 						pstmt.executeBatch();
