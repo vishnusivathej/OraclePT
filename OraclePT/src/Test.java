@@ -2,18 +2,24 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.HashMap;
+import java.util.HashSet;
 
 public class Test {
-	HashMap<String,HashMap<String,String>> Buffers = new HashMap<>();
-	HashMap<String,HashMap<String,String>> ActualDetails = new HashMap<>();
-	
-	void findBuffer(int file_id, int block_no) {
+	HashMap<String, HashMap<String,String>> Buffers  = new HashMap<>();
+	HashMap<String,String> BufferLinks = new HashMap<>();
+	HashMap<String,HashSet<String>> Hotlist = new HashMap<>();
+	HashMap<String,HashSet<String>> AuxList = new HashMap<>();
+	HashMap<String,HashSet<String>> ColdList = new HashMap<>();
+	HashMap<String, HashMap<String,String>> WriteList = new HashMap<>();
+	void Check() {
 		buildMap();
-		
+		for (String s: Buffers.keySet())
+			System.out.println(Buffers.get(s).size());
 	}
+	
+	
 	void buildMap() {
 		try {
-			
 			Connection oraCon = DBConnection.getOraSysConn();
 			Statement stmt = oraCon.createStatement();
 			String SQL = "select obj, dbarfil, dbablk,prv_repl,nxt_repl,set_ds,hladdr,  tch,decode(state,0,'free',1,'xcur',2,'scur',3,'cr', 4,'read',5,'mrec',6,'irec',7,'write',8,'pi', 9,'memory',10,'mwrite',11,'donated', 12,'protected',  13,'securefile', 14,'siop',15,'recckpt', 16, 'flashfree',  17, 'flashcur', 18, 'flashna') STATE from x$bh";
@@ -22,51 +28,94 @@ public class Test {
 			while (rs.next()) {
 				if (Buffers.get(rs.getString("SET_DS")) == null){
 					HashMap<String, String> temp = new HashMap<>();
+					temp.put(rs.getString("PRV_REPL"), rs.getString("NXT_REPL"));
 					Buffers.put(rs.getString("SET_DS"), temp);
 				}
 				else {
 					Buffers.get(rs.getString("SET_DS")).put(rs.getString("PRV_REPL"), rs.getString("NXT_REPL"));
 				}
-				HashMap<String, String> temp = new HashMap<>();
-				temp.put("OBJ", rs.getString("OBJ"));
-				temp.put("DBARFIL", rs.getString("DBARFIL"));
-				temp.put("DBABLK", rs.getString("DBABLK"));
-				temp.put("HLADDR", rs.getString("HLADDR"));
-				temp.put("STATE", rs.getString("STATE"));
-				temp.put("TCH", rs.getString("TCH"));
-				ActualDetails.put(rs.getString("PRV_REPL"), temp);
 			}
-			SQL = "select NXT_REPL, prv_repl, addr,COLD_HD from x$kcbwds where cnum_set > 0";
-			rs = stmt.executeQuery(SQL);
-			while (rs.next()) {
-				int i = 0;
-				System.out.println("Parsing CHAIN OF WORKING SET   --> " + rs.getString("ADDR"));
-				System.out.println("Displaying HotSection");
-				HashMap<String,String> workingSet = Buffers.get(rs.getString("ADDR"));
-				String Pointer = rs.getString("NXT_REPL");
-				while (Pointer != null) {
-					System.out.println(Pointer + " ---> " + workingSet.get(Pointer));
-					Pointer = workingSet.get(Pointer);
-					i++;
-				}
-				System.out.println("Buffers in the HostSection ---> " + workingSet.size() + " ---> " + (i -2));
-				System.out.println("Displaying ColdSection!"); 
-				Pointer = rs.getString("COLD_HD");
-				while (Pointer != null) {
-					System.out.println(Pointer + " ---> " + workingSet.get(Pointer));
-					Pointer = workingSet.get(Pointer);
-					i++;
-				}
-				System.out.println("Buffers in the ColdSection  ---> " + workingSet.size() + " ---> " + (i -2));
-			}
-			
 			rs.close();
 			stmt.close();
 			oraCon.close();
-			
 		}
-		catch (Exception E) {
+		catch(Exception E) {
 			E.printStackTrace();
 		}
 	}
+	
+	void test() {
+		try {
+			Connection oraCon = DBConnection.getOraSysConn();
+			Statement stmt = oraCon.createStatement();
+			String SQL = "select nxt_repl, nxt_replax,nxt_write, cold_hd, addr from x$kcbwds where cnum_set > 0";
+			ResultSet rs = stmt.executeQuery(SQL);
+			while (rs.next()) {
+				String temp = rs.getString("NXT_REPL");
+				HashSet<String> temp1 = new HashSet<>();
+				temp1.add(rs.getString("NXT_REPL"));
+				System.out.println("MAIN LIST");
+				while (temp!=null) {
+					System.out.println(temp  + " ---> " + Buffers.get(rs.getString("ADDR")).get(temp));
+					temp =  Buffers.get(rs.getString("ADDR")).get(temp);
+					temp1.add(temp);
+				}
+				Hotlist.put(rs.getString("ADDR"), temp1);
+				temp = rs.getString("NXT_REPLAX");
+				temp1 = new HashSet<>();
+				temp1.add(rs.getString("NXT_REPLAX"));
+				System.out.println("AUX LIST");
+				while (temp!=null) {
+					System.out.println(temp  + " ---> " + Buffers.get(rs.getString("ADDR")).get(temp));
+					temp =  Buffers.get(rs.getString("ADDR")).get(temp);
+					temp1.add(temp);
+				}
+				AuxList.put(rs.getString("ADDR"), temp1);
+				temp = rs.getString("COLD_HD");
+				temp1 = new HashSet<>();
+				temp1.add(rs.getString("COLD_HD"));
+				System.out.println("COLD LIST");
+				while (temp!=null) {
+					System.out.println(temp  + " ---> " + Buffers.get(rs.getString("ADDR")).get(temp));
+					temp =  Buffers.get(rs.getString("ADDR")).get(temp);
+					temp1.add(temp);
+				}
+				ColdList.put(rs.getString("ADDR"), temp1);
+			}
+			
+			
+			
+			
+			
+		}
+		catch(Exception E) {
+			E.printStackTrace();
+		}
+	}
+	
+	void buildRegions() {
+		try {
+			Connection oraCon = DBConnection.getOraSysConn();
+			Statement stmt = oraCon.createStatement();
+			String SQL = "select nxt_repl, nxt_replax,nxt_write, cold_hd, addr from x$kcbwds where cnum_set > 0";
+			ResultSet rs = stmt.executeQuery(SQL);
+			while (rs.next()) {
+				
+				//HotList.put(rs.getString("ADDR"), rs.getString("NXT_REPL"));
+				
+			}
+			
+			
+			
+			for (String s: Buffers.keySet()) {
+				
+			}
+		}
+		catch(Exception E) {
+			E.printStackTrace();
+		}
+	}
+	
+
+	
 }
