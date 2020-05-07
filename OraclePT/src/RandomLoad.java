@@ -64,7 +64,7 @@ public class RandomLoad {
 			catch(Exception E) {
 				
 			}
-			String SQL = "  create table students(student_id number, dept_id number, name varchar2(30) not null, sub_id number, day date, mark1 number, mark2 number, mark3 number, mark4 number)";
+			String SQL = "  create table students(student_id number, dept_id number, name varchar2(3000) not null, sub_id number, day date, mark1 number, mark2 number, mark3 number, mark4 number)";
 			stmt.execute(SQL);
 		//	SQL = "create index name on students(name)";
 		//	stmt.execute(SQL);
@@ -88,12 +88,12 @@ public class RandomLoad {
 				while (i < 30099900) {
 					pstmt.setInt(1 , oraSequence.nextVal());
 					pstmt.setInt(2, OraRandom.randomUniformInt(100));
-					pstmt.setString(3, OraRandom.randomString(30));
+					pstmt.setString(3, OraRandom.randomString(3000));
 					pstmt.setInt(4, OraRandom.randomUniformInt(200));
-					pstmt.setInt(5,  OraRandom.randomUniformInt(800));
-					pstmt.setInt(6,  OraRandom.randomUniformInt(1600));
-					pstmt.setInt(7, OraRandom.randomUniformInt(3200));
-					pstmt.setInt(8,  OraRandom.randomUniformInt(6400));
+					pstmt.setInt(5,  OraRandom.randomUniformInt(3200));
+					pstmt.setInt(6,  OraRandom.randomUniformInt(6400));
+					pstmt.setInt(7, OraRandom.randomUniformInt(12800));
+					pstmt.setInt(8,  OraRandom.randomUniformInt(25600));
 					pstmt.addBatch();
 					if (i%10000 == 0) {
 						pstmt.executeBatch();

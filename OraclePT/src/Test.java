@@ -13,8 +13,14 @@ public class Test {
 	HashMap<String, HashMap<String,String>> WriteList = new HashMap<>();
 	void Check() {
 		buildMap();
-		for (String s: Buffers.keySet())
-			System.out.println(Buffers.get(s).size());
+		test();
+		for (String s: Buffers.keySet()) {
+			System.out.println("Buffers in Working Set --> " + s + " ---> " +Buffers.get(s).size());
+			System.out.println("HostList --> " + Hotlist.get(s).size());
+			System.out.println("ColdList --> " + ColdList.get(s).size());
+			}
+			
+			
 	}
 	
 	
@@ -54,29 +60,19 @@ public class Test {
 				String temp = rs.getString("NXT_REPL");
 				HashSet<String> temp1 = new HashSet<>();
 				temp1.add(rs.getString("NXT_REPL"));
-				System.out.println("MAIN LIST");
+				System.out.println("MAIN LIST --> " + rs.getString("ADDR") );
 				while (temp!=null) {
-					System.out.println(temp  + " ---> " + Buffers.get(rs.getString("ADDR")).get(temp));
+				//	System.out.println(temp  + " ---> " + Buffers.get(rs.getString("ADDR")).get(temp));
 					temp =  Buffers.get(rs.getString("ADDR")).get(temp);
 					temp1.add(temp);
 				}
 				Hotlist.put(rs.getString("ADDR"), temp1);
-				temp = rs.getString("NXT_REPLAX");
-				temp1 = new HashSet<>();
-				temp1.add(rs.getString("NXT_REPLAX"));
-				System.out.println("AUX LIST");
-				while (temp!=null) {
-					System.out.println(temp  + " ---> " + Buffers.get(rs.getString("ADDR")).get(temp));
-					temp =  Buffers.get(rs.getString("ADDR")).get(temp);
-					temp1.add(temp);
-				}
-				AuxList.put(rs.getString("ADDR"), temp1);
 				temp = rs.getString("COLD_HD");
 				temp1 = new HashSet<>();
 				temp1.add(rs.getString("COLD_HD"));
-				System.out.println("COLD LIST");
+				System.out.println("COLD LIST --> " + rs.getString("ADDR") );
 				while (temp!=null) {
-					System.out.println(temp  + " ---> " + Buffers.get(rs.getString("ADDR")).get(temp));
+				//	System.out.println(temp  + " ---> " + Buffers.get(rs.getString("ADDR")).get(temp));
 					temp =  Buffers.get(rs.getString("ADDR")).get(temp);
 					temp1.add(temp);
 				}
