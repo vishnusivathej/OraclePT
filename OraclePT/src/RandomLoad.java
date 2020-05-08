@@ -27,23 +27,23 @@ public class RandomLoad {
 		
 	}
 	void updateLoad() {
-		ExecutorService asd = Executors.newFixedThreadPool(50);
+		ExecutorService asd = Executors.newFixedThreadPool(10);
 		int i = 0;
-		while (i < 50) {
+		while (i < 4) {
 			asd.submit(new UpdateLoad());
 			i++;
 		}
 		i = 0;
-		while (i < 20) {
+		while (i < 5) {
 			asd.submit(new Update2());
 			i++;
 		}
 		
 	}
 	void selectLoad() {
-		ExecutorService asd = Executors.newFixedThreadPool(50);
+		ExecutorService asd = Executors.newFixedThreadPool(10);
 		int i = 0;
-		while (i < 1) {
+		while (i < 10) {
 			asd.submit(new SelectLoad());
 			i++;
 		}
@@ -64,7 +64,7 @@ public class RandomLoad {
 			catch(Exception E) {
 				
 			}
-			String SQL = "  create table students(student_id number, dept_id number, name varchar2(3000) not null, sub_id number, day date, mark1 number, mark2 number, mark3 number, mark4 number)";
+			String SQL = "  create table students(student_id number primary key, dept_id number, name varchar2(30) not null, sub_id number, day date, mark1 number, mark2 number, mark3 number, mark4 number)";
 			stmt.execute(SQL);
 		//	SQL = "create index name on students(name)";
 		//	stmt.execute(SQL);
@@ -85,17 +85,18 @@ public class RandomLoad {
 				Connection oraCon = DBConnection.getOraConn();
 				PreparedStatement pstmt = oraCon.prepareStatement("insert into students (student_id, dept_id, name, sub_id,  day, mark1, mark2, mark3, mark4) values (?,?,?,?,to_date(trunc(dbms_random.value(2458485,2458849)),'J'),?,?,?,?)");
 				int i = 0;
-				while (i < 30099900) {
+				while (i < 1000000) {
 					pstmt.setInt(1 , oraSequence.nextVal());
 					pstmt.setInt(2, OraRandom.randomUniformInt(100));
-					pstmt.setString(3, OraRandom.randomString(3000));
+					pstmt.setString(3, OraRandom.randomString(30));
 					pstmt.setInt(4, OraRandom.randomUniformInt(200));
 					pstmt.setInt(5,  OraRandom.randomUniformInt(3200));
 					pstmt.setInt(6,  OraRandom.randomUniformInt(6400));
 					pstmt.setInt(7, OraRandom.randomUniformInt(12800));
 					pstmt.setInt(8,  OraRandom.randomUniformInt(25600));
+					//pstmt.executeUpdate();
 					pstmt.addBatch();
-					if (i%10000 == 0) {
+					if (i%1000 == 0) {
 						pstmt.executeBatch();
 						System.out.println("loaded " + oraSequence.getval());
 					}
@@ -118,8 +119,8 @@ public class RandomLoad {
 			try {
 				System.out.println("Staring Update Thread -->" + Thread.currentThread().getName());
 				Connection oraCon = DBConnection.getOraConn();
-				PreparedStatement pstmt = oraCon.prepareStatement("Update RandomLoad set mark1 = ? where roll = ? ");
-				String SQL = "select max(roll) from randomload";
+				PreparedStatement pstmt = oraCon.prepareStatement("Update students set mark1 = ? where mark1 = ? ");
+				String SQL = "select max(student_id) from students";
 				Statement stmt = oraCon.createStatement();
 				ResultSet rs = stmt.executeQuery(SQL);
 				int maxvalue= 0;
@@ -130,8 +131,8 @@ public class RandomLoad {
 				rs.close();
 				stmt.close();
 				int i = 0;
-				while (i < 4000) {
-					pstmt.setInt(2 , OraRandom.randomUniformInt(maxvalue));
+				while (i < 4000000) {
+					pstmt.setInt(2 , 3200);
 					pstmt.setInt(1, OraRandom.randomSkewInt(100));
 					pstmt.executeUpdate();
 					i++;
@@ -149,8 +150,8 @@ public class RandomLoad {
 			try {
 				System.out.println("Staring Update Thread -->" + Thread.currentThread().getName());
 				Connection oraCon = DBConnection.getOraConn();
-				PreparedStatement pstmt = oraCon.prepareStatement("Update temp set mark1 = ? where roll = ? ");
-				String SQL = "select max(roll) from temp";
+				PreparedStatement pstmt = oraCon.prepareStatement("Update students set mark1 = ? where mark1 = ? ");
+				String SQL = "select max(student_id) from students";
 				Statement stmt = oraCon.createStatement();
 				ResultSet rs = stmt.executeQuery(SQL);
 				int maxvalue= 0;
@@ -161,8 +162,8 @@ public class RandomLoad {
 				rs.close();
 				stmt.close();
 				int i = 0;
-				while (i < 4000) {
-					pstmt.setInt(2 , OraRandom.randomUniformInt(maxvalue));
+				while (i < 4000000) {
+					pstmt.setInt(2 , 3200);
 					pstmt.setInt(1, OraRandom.randomSkewInt(100));
 					pstmt.executeUpdate();
 					i++;
@@ -181,7 +182,7 @@ public class RandomLoad {
 				System.out.println("Staring Select  Thread -->" + Thread.currentThread().getName());
 				Connection oraCon = DBConnection.getOraConn();
 			
-				PreparedStatement pstmt = oraCon.prepareStatement("select avg(mark1) from  RandomLoad where mark6 = ?");
+				PreparedStatement pstmt = oraCon.prepareStatement("select avg(mark1) from  test where mark4 = ?");
 				pstmt.setFetchSize(50000);
 				int i = 0;
 				while (true) {
