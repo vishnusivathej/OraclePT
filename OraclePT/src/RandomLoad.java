@@ -12,7 +12,7 @@ public class RandomLoad {
 	void loadTable() throws InterruptedException {
 		ExecutorService asd = Executors.newFixedThreadPool(30);
 		int i = 0;
-		while (i < 10) {
+		while (i < 1) {
 			asd.submit(new InsertLoad());
 			i++;
 		}
@@ -64,7 +64,7 @@ public class RandomLoad {
 			catch(Exception E) {
 				
 			}
-			String SQL = "  create table students(student_id number primary key, dept_id number, name varchar2(30) not null, sub_id number, day date, mark1 number, mark2 number, mark3 number, mark4 number)";
+			String SQL = "  create table students(student_id number primary key, dept_id number, name varchar2(1) not null, sub_id number, day date, mark1 number, mark2 number, mark3 number, mark4 number)";
 			stmt.execute(SQL);
 		//	SQL = "create index name on students(name)";
 		//	stmt.execute(SQL);
@@ -79,6 +79,7 @@ public class RandomLoad {
 		
 	}
 	class InsertLoad implements Runnable{
+		@SuppressWarnings("static-access")
 		public void run() {
 			try {
 				System.out.println("Staring Insert Thread -->" + Thread.currentThread().getName());
@@ -88,16 +89,17 @@ public class RandomLoad {
 				while (i < 1000000) {
 					pstmt.setInt(1 , oraSequence.nextVal());
 					pstmt.setInt(2, OraRandom.randomUniformInt(100));
-					pstmt.setString(3, OraRandom.randomString(30));
+					pstmt.setString(3, OraRandom.randomString(1));
 					pstmt.setInt(4, OraRandom.randomUniformInt(200));
 					pstmt.setInt(5,  OraRandom.randomUniformInt(1600));
 					pstmt.setInt(6,  OraRandom.randomUniformInt(3200));
 					pstmt.setInt(7, OraRandom.randomUniformInt(4800));
 					pstmt.setInt(8,  OraRandom.randomUniformInt(6400));
-					//pstmt.executeUpdate();
-					pstmt.addBatch();
-					if (i%1000 == 0) {
-						pstmt.executeBatch();
+					pstmt.executeUpdate();
+					//pstmt.addBatch();
+					
+					if (i%10000 == 0) {
+					//	pstmt.executeBatch();
 						System.out.println("loaded " + oraSequence.getval());
 					}
 					i++;
