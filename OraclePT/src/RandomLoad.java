@@ -10,21 +10,28 @@ import java.util.concurrent.Executors;
 public class RandomLoad {
 	@SuppressWarnings("static-access")
 	void loadTable() throws InterruptedException {
-		ExecutorService asd = Executors.newFixedThreadPool(30);
-		int i = 0;
-		while (i < 1) {
-			asd.submit(new InsertLoad());
-			i++;
-		}
-		i = 0 ;
-		System.out.println("Loading Data... Sleepin for 10 seconds");
-		asd.shutdown();
-		while(!asd.isShutdown()) {
-			Thread.currentThread().sleep(1000);
-		}
-		asd.shutdownNow();
-		asd = Executors.newFixedThreadPool(30);
+		try {
+
+			ExecutorService asd = Executors.newFixedThreadPool(30);
+			int i = 0;
+			while (i < 10) {
+				asd.submit(new InsertLoad());
+				i++;
+			}
+			i = 0 ;
+			System.out.println("Loading Data... Sleepin for 10 seconds");
+			asd.shutdown();
+			while(!asd.isShutdown()) {
+				Thread.currentThread().sleep(1000);
+			}
+			asd.shutdownNow();
+			asd = Executors.newFixedThreadPool(30);
+			
 		
+		}
+		catch(Exception E) {
+			E.printStackTrace();
+		}
 	}
 	void updateLoad() {
 		ExecutorService asd = Executors.newFixedThreadPool(10);
@@ -95,11 +102,11 @@ public class RandomLoad {
 					pstmt.setInt(6,  OraRandom.randomUniformInt(3200));
 					pstmt.setInt(7, OraRandom.randomUniformInt(4800));
 					pstmt.setInt(8,  OraRandom.randomUniformInt(6400));
-					pstmt.executeUpdate();
-					//pstmt.addBatch();
+					//pstmt.executeUpdate();
+					pstmt.addBatch();
 					
 					if (i%10000 == 0) {
-					//	pstmt.executeBatch();
+						pstmt.executeBatch();
 						System.out.println("loaded " + oraSequence.getval());
 					}
 					i++;
