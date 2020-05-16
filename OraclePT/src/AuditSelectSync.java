@@ -7,7 +7,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 
-public class LibraryGatherStats {
+public class AuditSelectSync {
 	ArrayList<String> SQL = new ArrayList<>();
 	
 	
@@ -20,35 +20,30 @@ public class LibraryGatherStats {
 			asd.submit(new SelectLoad());
 			i++;
 		}
-		asd.submit(new GatherStatistics());
+		
 	}
 	
 	void GenerateSQL() {
-		int i = 0;
-		String temp = " * from students where student_id = ?";		
-		while (i < 3000 ) {
-			SQL.add("select /* " + i +"*/ " + temp);
-			i++;
+		try {
+
+			int i = 0;
+			String temp = " * from students where student_id = ?";		
+			while (i < 3000 ) {
+				SQL.add("select /* " + i +"*/ " + temp);
+				i++;
+			}
+			Connection oraCon = DBConnection.getOraConn();
+			Statement stmt = oraCon.createStatement();
+			temp = "audit all on vishnu.students by access";
+			stmt.executeUpdate(temp);
+		
+		}
+		catch(Exception E) {
+			E.printStackTrace();
 		}
 	}
 	
-	class GatherStatistics implements Runnable{
-		@SuppressWarnings("static-access")
-		public void run() {
-			try {
-				int i = 0;
-				while (i < 10000) {
-					GatherStats a = new GatherStats("STUDENTS");
-					a.run();
-					Thread.currentThread().sleep(1000);
-					i++;
-				}
-			}
-			catch(Exception E) {
-				E.printStackTrace();
-			}
-		}
-	}
+	
 	
 	class SelectLoad implements Runnable{
 		public void run() {

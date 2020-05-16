@@ -7,7 +7,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 
-public class LibraryGatherStats {
+public class LibraryCacheComment {
 	ArrayList<String> SQL = new ArrayList<>();
 	
 	
@@ -20,7 +20,7 @@ public class LibraryGatherStats {
 			asd.submit(new SelectLoad());
 			i++;
 		}
-		asd.submit(new GatherStatistics());
+		asd.submit(new AddComment());
 	}
 	
 	void GenerateSQL() {
@@ -32,15 +32,17 @@ public class LibraryGatherStats {
 		}
 	}
 	
-	class GatherStatistics implements Runnable{
+	class AddComment implements Runnable{
 		@SuppressWarnings("static-access")
 		public void run() {
 			try {
+				Connection oraCon = DBConnection.getOraConn();
+				Statement stmt = oraCon.createStatement();
+				String SQL = "comment on table students is 'test'";
 				int i = 0;
-				while (i < 10000) {
-					GatherStats a = new GatherStats("STUDENTS");
-					a.run();
-					Thread.currentThread().sleep(1000);
+				while (i < 1000) {
+					stmt.execute(SQL);
+					Thread.currentThread().sleep(3000);
 					i++;
 				}
 			}
