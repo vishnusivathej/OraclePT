@@ -10,7 +10,7 @@ public class GatherStats {
 
 		try {
 			Connection oraCon = DBConnection.getOraConn();
-			CallableStatement cstmt = oraCon.prepareCall ("{call dbms_stats.gather_table_stats('VISHNU',?,cascade=>true)}");
+			CallableStatement cstmt = oraCon.prepareCall ("{call dbms_stats.gather_table_stats('VISHNU',?,cascade=>true, no_invalidate=>false)}");
 			cstmt.setString(1, tabName);
 			cstmt.executeUpdate();
 		}

@@ -71,7 +71,7 @@ public class RandomLoad {
 			catch(Exception E) {
 				
 			}
-			String SQL = "  create table students(student_id number primary key, dept_id number, name varchar2(1) not null, sub_id number, day date, mark1 number, mark2 number, mark3 number, mark4 number)";
+			String SQL = "  create table students(student_id number primary key, dept_id number, name varchar2(30) not null, sub_id number, day date, mark1 number, mark2 number, mark3 number, mark4 number)";
 			stmt.execute(SQL);
 		//	SQL = "create index name on students(name)";
 		//	stmt.execute(SQL);
@@ -96,7 +96,7 @@ public class RandomLoad {
 				while (i < 1000000) {
 					pstmt.setInt(1 , oraSequence.nextVal());
 					pstmt.setInt(2, OraRandom.randomUniformInt(100));
-					pstmt.setString(3, OraRandom.randomString(1));
+					pstmt.setString(3, OraRandom.randomString(30));
 					pstmt.setInt(4, OraRandom.randomUniformInt(200));
 					pstmt.setInt(5,  OraRandom.randomUniformInt(1600));
 					pstmt.setInt(6,  OraRandom.randomUniformInt(3200));
@@ -190,14 +190,21 @@ public class RandomLoad {
 			try {
 				System.out.println("Staring Select  Thread -->" + Thread.currentThread().getName());
 				Connection oraCon = DBConnection.getOraConn();
+				Statement stmt = oraCon.createStatement();
+				String SQL = "select maX(student_id) from students";
+				int maxValue = 0;
+				ResultSet rs= stmt.executeQuery(SQL);
+				while (rs.next()) {
+					maxValue = rs.getInt(1);
+				}
 			
-				PreparedStatement pstmt = oraCon.prepareStatement("select avg(mark1) from  test where mark4 = ?");
+				PreparedStatement pstmt = oraCon.prepareStatement("select * from students where student_id = ?");
 				pstmt.setFetchSize(50000);
 				int i = 0;
 				while (true) {
 					while (i < 1000000) {
-						pstmt.setInt(1, OraRandom.randomUniformInt(100));
-						ResultSet rs = pstmt.executeQuery();
+						pstmt.setInt(1, OraRandom.randomUniformInt(maxValue));
+						rs = pstmt.executeQuery();
 						while(rs.next()) {
 							rs.getInt(1);
 						}
