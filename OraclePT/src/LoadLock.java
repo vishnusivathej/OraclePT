@@ -2,32 +2,42 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 
 public class LoadLock {
 
 
 	void run() {
-		CreateTable("Vishnu");
-		CloneTable("Vishnu");
-		
+		//CreateTable("Vishnu");
+		//CloneTable("Vishnu");
+		ExecutorService asd = Executors.newFixedThreadPool(30);
+		int i = 0;
+		while (i < 30) {
+			asd.submit(new RunLoad());
+			i++;
+		}
+	
 	}
 	class RunLoad implements Runnable{
 		public void run() {
 
 			try {
 				Connection oraCon = DBConnection.getOraConn();
-				
-
-				
-				
-				
-				String SQL = "";//"select table_name from user_tables where table_name like '" + tabName.toUpperCase() + "%'";
-				ResultSet rs = stmt.executeQuery(SQL);
-				while (rs.next()) {
-					Statement stmt2 = oraCon.createStatement();
-					stmt2.executeUpdate("drop table " + rs.getString(1));
-					System.out.println("Dropping Table " + rs.getString(1));
-					stmt2.close();
+				PreparedStatement pstmt;
+				ResultSet rs;
+				int i = 0;
+				while (i < 1000000) {
+					String SQL = "select * from Vishnu" + OraRandom.randomUniformInt(19171) +" where t1 = ?";
+					pstmt =  oraCon.prepareStatement(SQL);
+					pstmt.setInt(1, OraRandom.randomUniformInt(1000));
+					rs = pstmt.executeQuery();
+					while (rs.next()) {
+						
+					}
+					pstmt.close();
+					i++;
 				}
 			}
 			catch(Exception E) {
