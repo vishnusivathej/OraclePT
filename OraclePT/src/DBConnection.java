@@ -8,14 +8,9 @@ class DBConnection {
                 return DriverManager.getConnection("jdbc:oracle:thin:@(DESCRIPTION=(SDU=32767)(ADDRESS=(PROTOCOL=TCP)(HOST=10.10.1.20)(PORT=1521))(CONNECT_DATA=(SID=noncdb)(SERVER=DEDICATED)))","asdf","asdf");
         }
         catch(Exception E) {
-                if (E.toString().contains("ClassNotFoundException")) {
-                        System.out.println("Java Driver not found");
-                        System.out.println("Please Download Oracle JDBC driver(ojdbc10.jar) and place in $JRE_HOME/lib/ext");
-                }
-                else {
-                	E.printStackTrace();
-                }
-                return null;
+        	System.out.println("Failed Once");
+               return null;
+               
         }
 		}
         static Connection getOraConn() {
