@@ -11,4 +11,7 @@ public class oraSequence {
 	synchronized static void setVal(int val) {
 		value = val + 100000;
 	}
+	synchronized static void reset() {
+		value  = 0;
+	}
 }
