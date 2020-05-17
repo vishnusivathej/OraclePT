@@ -6,6 +6,9 @@ import java.util.concurrent.Executors;
 
 public class CRException {
 
+	/*
+	 * Consistent reads exception
+	 */
 	
 	void run(int NO_OF_THREADS) {
 		ExecutorService asd = Executors.newFixedThreadPool(NO_OF_THREADS);
