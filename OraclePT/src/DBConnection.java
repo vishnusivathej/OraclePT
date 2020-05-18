@@ -5,18 +5,6 @@ import oracle.jdbc.OracleConnection;
 
 class DBConnection {
 	
-	static OracleConnection getOCICon() {
-		try {
-			OracleConnection a = (OracleConnection) DriverManager.getConnection("jdbc:oracle:thin:@(DESCRIPTION=(SDU=32767)(ADDRESS=(PROTOCOL=TCP)(HOST=10.10.1.20)(PORT=1521))(CONNECT_DATA=(SID=noncdb)(SERVER=DEDICATED)))","vishnu","oracle");
-			a.setStatementCacheSize(12800000);
-			return a;
-		}
-		catch(Exception E) {
-			E.printStackTrace();
-			return null;
-		}
-		
-	}
 	
 	
 		static Connection getFailedCon() {
