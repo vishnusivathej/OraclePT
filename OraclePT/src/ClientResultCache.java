@@ -11,7 +11,7 @@ public class ClientResultCache {
 		CreateTable();
 		ExecutorService asd = Executors.newFixedThreadPool(30);
 		int i = 0;
-		while (i < 30) {
+		while (i < 40) {
 			asd.submit(new RunLoad());
 			i++;
 		}
@@ -21,11 +21,11 @@ public class ClientResultCache {
 		public void run() {
 			try {
 				Connection oraCon = DBConnection.getOraConn();
-				String SQL = "select /*+ result_cache */ * from clientcache where t1 = ?";
+				String SQL = "select /*+ RESULT_CACHE */ * from clientcache where t1 = ?";
 				PreparedStatement pstmt = oraCon.prepareStatement(SQL);
 				int i = 0;
 				while (i < 10000000) {
-					pstmt.setInt(1, OraRandom.randomUniformInt(100));
+					pstmt.setInt(1, OraRandom.randomUniformInt(400000));
 					ResultSet rs = pstmt.executeQuery();
 					while(rs.next()) {
 						
@@ -41,7 +41,51 @@ public class ClientResultCache {
 		}
 	}
 	
-	
+	class RunDMLLoad implements Runnable{
+		public void run() {
+			try {
+				Connection oraCon = DBConnection.getOraConn();
+				String SQL = "update clientcache set t2 = ? where t1 = ?";
+				PreparedStatement pstmt = oraCon.prepareStatement(SQL);
+				int i = 0;
+				while (i < 1000000) {
+					pstmt.setInt(2, OraRandom.randomUniformInt(4000));
+					pstmt.setString(1, OraRandom.randomString(20));
+					pstmt.addBatch();
+					if (i%100 == 0) {
+						pstmt.executeBatch();
+					}
+					i++;
+				}
+			}
+			catch(Exception E) {
+				E.printStackTrace();
+			}
+		}
+	}
+	class RunLoadNormal implements Runnable{
+		public void run() {
+			try {
+				Connection oraCon = DBConnection.getOraConn();
+				String SQL = "select * from clientcache where t1 = ?";
+				PreparedStatement pstmt = oraCon.prepareStatement(SQL);
+				int i = 0;
+				while (i < 10000000) {
+					pstmt.setInt(1, OraRandom.randomUniformInt(400000));
+					ResultSet rs = pstmt.executeQuery();
+					while(rs.next()) {
+						
+					}
+					rs.close();
+					i++;
+				}
+				
+			}
+			catch(Exception E) {
+				E.printStackTrace();
+			}
+		}
+	}
 	
 	
 	void CreateTable() {
