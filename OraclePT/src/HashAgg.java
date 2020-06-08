@@ -38,7 +38,7 @@ public class HashAgg {
 			try {
 				Connection oraCon = DBConnection.getOraConn();
 				Statement stmt = oraCon.createStatement();
-				String SQL = "select /*+USE_HASH_AGGREGATION*/ distinct student_id from students where mark4=25 order by student_id";
+				String SQL = "select  distinct student_id from students where mark4=20 order by student_id";
 				int i = 0;
 				ResultSet rs;
 				
@@ -66,7 +66,7 @@ public class HashAgg {
 			try {
 				Connection oraCon = DBConnection.getOraConn();
 				Statement stmt = oraCon.createStatement();
-				String SQL = "select distinct student_id from students where mark4=25 ";
+				String SQL = "select distinct student_id from students where mark4=20";
 				int i = 0;
 				ResultSet rs;
 				

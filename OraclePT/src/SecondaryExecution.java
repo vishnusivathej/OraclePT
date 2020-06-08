@@ -24,7 +24,7 @@ public class SecondaryExecution {
 				String SQL = "select student_id from students where mark4=20";
 				
 				String SQL2 = "select avg(mark1) from students2";
-				String SQL3 = "alter system flush buffer_cache";
+				String SQL3 = "@";
 				Statement stmt2 = oraCon.prepareStatement(SQL3);
 				int i = 0;
 				ResultSet rs2;

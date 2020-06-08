@@ -2,8 +2,7 @@
 public class Start {
 	@SuppressWarnings("static-access")
 	public static void main(String[] args) throws InterruptedException  {
-		SecondaryExecution a = new SecondaryExecution();
-		a.run();
-		
+		PGAMultipleCursors a = new PGAMultipleCursors();
+		a.run(1);
 	}
 }
