@@ -97,10 +97,10 @@ public class RandomLoad {
 					pstmt.setInt(2, OraRandom.randomUniformInt(200));
 					pstmt.setString(3, OraRandom.randomString(30));
 					pstmt.setInt(4, OraRandom.randomUniformInt(500));
-					pstmt.setInt(5,  OraRandom.randomSkewInt(1600));
-					pstmt.setInt(6,  OraRandom.randomSkewInt(3200));
+					pstmt.setInt(5,  OraRandom.randomUniformInt(1600));
+					pstmt.setInt(6,  OraRandom.randomUniformInt(3200));
 					pstmt.setInt(7, OraRandom.randomUniformInt(4800));
-					pstmt.setInt(8,  OraRandom.randomSkewInt(6400));
+					pstmt.setInt(8,  OraRandom.randomUniformInt(6400));
 					//pstmt.executeUpdate();
 					pstmt.addBatch();
 					
