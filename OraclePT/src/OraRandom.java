@@ -5,7 +5,7 @@ public class OraRandom {
 	
 	//Generates Random random distribution of data... value less than (int a)
 	static int randomSkewInt(int a) {
-		return Math.abs(Math.round((new Random().nextInt()/(new Random().nextInt()/4))%a));
+		return Math.abs(Math.round((new Random().nextInt()/(new Random().nextInt()))%a));
 	}
 	
 	//Generates Random uniform distribution of data... value less than (int a)

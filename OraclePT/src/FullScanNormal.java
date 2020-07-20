@@ -5,7 +5,7 @@ public class FullScanNormal implements Runnable{
 	public void run() {
 		try {
 			Connection oraCon = DBConnection.getOraConn();
-			String SQL = "Select avg(dept_id) from students";
+			String SQL = "Select avg(mark1) from Practice4";
 			Statement stmt = oraCon.createStatement();
 			int i = 0;
 			while (i < 100000) {
