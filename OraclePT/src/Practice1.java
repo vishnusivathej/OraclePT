@@ -1,7 +1,6 @@
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
 
 public class Practice1 {
 	static Connection  oraCon = DBConnection.getOraConn();
@@ -206,7 +205,19 @@ public class Practice1 {
 	class Scenario9 implements Runnable{
 		public void run() {
 			try {
-				
+				PreparedStatement pstmt = oraCon.prepareStatement("select * from students where student_id =?");
+				int i = 0;
+				while (i < 5000000) {
+					int temp = OraRandom.randomUniformInt(1000000);
+					pstmt.setInt(1,temp);
+					ResultSet rs = pstmt.executeQuery();
+					rs.setFetchSize(256);
+					while (rs.next()) {
+						rs.getInt(1);
+					}
+					i++;
+					rs.close();
+				}
 			}
 			catch(Exception E) {
 				
@@ -218,7 +229,19 @@ public class Practice1 {
 	class Scenario10 implements Runnable{
 		public void run() {
 			try {
-				
+				PreparedStatement pstmt = oraCon.prepareStatement("select * from students where mark1=? or mark2=? ");
+				int i = 0;
+				while (i < 5000000) {
+					pstmt.setInt(1, OraRandom.randomUniformInt(3200));
+					pstmt.setInt(2, OraRandom.randomUniformInt(3200));
+					ResultSet rs = pstmt.executeQuery();
+					rs.setFetchSize(256);
+					while (rs.next()) {
+						rs.getInt(1);
+					}
+					i++;
+					rs.close();
+				}
 			}
 			catch(Exception E) {
 				
@@ -229,7 +252,19 @@ public class Practice1 {
 	class Scenario11 implements Runnable{
 		public void run() {
 			try {
-				
+				PreparedStatement pstmt = oraCon.prepareStatement("select * from students where mark1=? and mark2=? ");
+				int i = 0;
+				while (i < 5000000) {
+					pstmt.setInt(1, OraRandom.randomUniformInt(3200));
+					pstmt.setInt(2, OraRandom.randomUniformInt(3200));
+					ResultSet rs = pstmt.executeQuery();
+					rs.setFetchSize(256);
+					while (rs.next()) {
+						rs.getInt(1);
+					}
+					i++;
+					rs.close();
+				}
 			}
 			catch(Exception E) {
 				
@@ -240,16 +275,40 @@ public class Practice1 {
 	class Scenario12 implements Runnable{
 		public void run() {
 			try {
-				
+				PreparedStatement pstmt = oraCon.prepareStatement("select * from students where mark2 is null ");
+				int i = 0;
+				while (i < 5000000) {
+					ResultSet rs = pstmt.executeQuery();
+					rs.setFetchSize(256);
+					while (rs.next()) {
+						rs.getInt(1);
+					}
+					i++;
+					rs.close();
+				}
 			}
 			catch(Exception E) {
 				
 			}
 		}
-	}	class Scenario13 implements Runnable{
+	}	
+	
+	
+	class Scenario13 implements Runnable{
 		public void run() {
 			try {
-				
+				PreparedStatement pstmt = oraCon.prepareStatement("select dept_id,max(mark1) from students where sub_id = ? group by dept_id  ");
+				int i = 0;
+				while (i < 5000000) {
+					pstmt.setInt(1, OraRandom.randomUniformInt(200));
+					ResultSet rs = pstmt.executeQuery();
+					rs.setFetchSize(256);
+					while (rs.next()) {
+						rs.getInt(1);
+					}
+					i++;
+					rs.close();
+				}
 			}
 			catch(Exception E) {
 				
