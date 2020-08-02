@@ -45,5 +45,13 @@ public class OraRandom {
 	    }
 	    return buffer.toString();
 	}
+	static String randomYesNo() {
+		if (randomUniformInt(100)%2==0) {
+			return "YES";
+		}
+		else {
+			return "NO";
+		}
+	}
 }
 //random Date: to_date(trunc(dbms_random.value(2458485,2458849)),'J')

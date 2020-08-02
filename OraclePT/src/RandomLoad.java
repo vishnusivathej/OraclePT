@@ -15,7 +15,7 @@ public class RandomLoad {
 			ExecutorService asd = Executors.newFixedThreadPool(30);
 			int i = 0;
 			while (i < 10) {
-				asd.submit(new InsertLoad());
+				asd.submit(new SelectLoad());
 				i++;
 			}
 			i = 0 ;
@@ -187,6 +187,9 @@ public class RandomLoad {
 	class SelectLoad implements Runnable{
 		public void run() {
 			try {
+				 DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");  
+				   LocalDateTime now = LocalDateTime.now();  
+				   System.out.println(dtf.format(now));  
 				System.out.println("Staring Select  Thread -->" + Thread.currentThread().getName());
 				Connection oraCon = DBConnection.getOraConn();
 				Statement stmt = oraCon.createStatement();
@@ -197,12 +200,12 @@ public class RandomLoad {
 					maxValue = rs.getInt(1);
 				}
 			
-				PreparedStatement pstmt = oraCon.prepareStatement("select * from students where student_id = ?");
+				PreparedStatement pstmt = oraCon.prepareStatement("select * from students where mark2 < ? order by mark2");
 				pstmt.setFetchSize(50000);
 				int i = 0;
-				while (true) {
-					while (i < 1000000) {
-						pstmt.setInt(1, OraRandom.randomUniformInt(maxValue));
+				
+					while (i < 1000) {
+						pstmt.setInt(1, 4);
 						rs = pstmt.executeQuery();
 						while(rs.next()) {
 							rs.getInt(1);
@@ -210,8 +213,10 @@ public class RandomLoad {
 						i++;
 						rs.close();
 					}
-				}
-	
+
+				  dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");  
+				    now = LocalDateTime.now();  
+				   System.out.println(dtf.format(now));  
 			}
 			catch(Exception E) {
 				E.printStackTrace();
