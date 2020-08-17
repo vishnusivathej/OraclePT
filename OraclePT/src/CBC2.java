@@ -7,7 +7,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 
-public class CBC {
+public class CBC2 {
 
 	
 	void CBCLoad() {
@@ -18,7 +18,7 @@ public class CBC {
 			i++;
 		}
 		i = 0 ;
-		while (i < 10) {
+		while (i < 5) {
 			asd.submit(new updateLoadGeneric());
 			i++;
 		}
@@ -64,18 +64,12 @@ public class CBC {
 			try {
 				ArrayList<Integer> values = new ArrayList<>();
 				Connection oraCon = DBConnection.getOraConn();
-				String SQL = "select student_id from students where mark3 = 123";
-				Statement stmt = oraCon.createStatement();
-				ResultSet rs = stmt.executeQuery(SQL);
-				while (rs.next()) {
-					values.add(rs.getInt(1));
-				}
-				SQL = "update students set mark2 = ? where student_id = ?";
+				String SQL = "update students2 set mark1 = ? where mark4= ? ";
 				PreparedStatement pstmt = oraCon.prepareStatement(SQL);
 				int i = 0;
 				while (i < 10000000) {
-					pstmt.setInt(1, OraRandom.randomUniformInt(3200));
-					pstmt.setInt(2, values.get(OraRandom.randomUniformInt(values.size()-2)));
+					pstmt.setInt(1, OraRandom.randomUniformInt(100));
+					pstmt.setInt(2, OraRandom.randomUniformInt(6400));
 					pstmt.addBatch();
 					if (i %100 == 0) {
 						pstmt.executeBatch();
@@ -95,15 +89,15 @@ public class CBC {
 			try {
 				System.out.println("Starting Thread" + Thread.currentThread().getName());
 				Connection oraCon = DBConnection.getOraConn();
-				String SQL = "select avg(mark1) from students where mark3 = 123";
+				PreparedStatement stmt = oraCon.prepareStatement("select avg(mark1) from students where mark4 = ?");
 				System.out.println("Acquired Connection");
-				Statement stmt = oraCon.createStatement();
 				int i = 0;
 				ResultSet rs;
 				while (i < 1000000) {
-					rs = stmt.executeQuery(SQL);
+					stmt.setInt(1, OraRandom.randomUniformInt(6400));
+					rs = stmt.executeQuery();
 					while (rs.next()) {
-						
+						rs.getInt(1);
 					}
 					i++;
 				}
