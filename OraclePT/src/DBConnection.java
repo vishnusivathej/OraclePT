@@ -23,7 +23,7 @@ class DBConnection {
         static Connection getOraConn() {
                 try {
                         Class.forName("oracle.jdbc.driver.OracleDriver");
-                        return DriverManager.getConnection("jdbc:oracle:thin:@(DESCRIPTION=(SDU=32767)(ADDRESS=(PROTOCOL=TCP)(HOST=10.10.1.20)(PORT=1521))(CONNECT_DATA=(SID=noncdb)(SERVER=DEDICATED)))","vishnu","oracle");
+                        return DriverManager.getConnection("jdbc:oracle:thin:@(DESCRIPTION=(SDU=32767)(ADDRESS=(PROTOCOL=TCP)(HOST=192.168.0.20)(PORT=1521))(CONNECT_DATA=(SID=noncdb)(SERVER=DEDICATED)))","vishnu","oracle");
                 }
                 catch(Exception E) {
                         if (E.toString().contains("ClassNotFoundException")) {

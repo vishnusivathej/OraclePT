@@ -14,7 +14,7 @@ public class RandomLoad {
 
 			ExecutorService asd = Executors.newFixedThreadPool(30);
 			int i = 0;
-			while (i < 15) {
+			while (i < 10) {
 				asd.submit(new InsertLoad());
 				i++;
 			}
@@ -70,7 +70,7 @@ public class RandomLoad {
 			catch(Exception E) {
 				
 			}
-			String SQL = "  create table students(student_id number  , dept_id varchar2(3000), name varchar2(3000) not null, sub_id number, day date, mark1 number, mark2 number, mark3 number, mark4 number)";
+			String SQL = "  create table students(student_id number  , dept_id number, name varchar2(30) not null, sub_id number, day date, mark1 number, mark2 number, mark3 number, mark4 number)";
 			stmt.execute(SQL);
 		//	SQL = "create index name on students(name)";
 		//	stmt.execute(SQL);
@@ -90,24 +90,24 @@ public class RandomLoad {
 			try {
 				System.out.println("Staring Insert Thread -->" + Thread.currentThread().getName());
 				Connection oraCon = DBConnection.getOraConn();
-				PreparedStatement pstmt = oraCon.prepareStatement("insert /*2*/ into students (student_id, dept_id, name, sub_id,  day, mark1, mark2, mark3, mark4) values (?,?,?,?,to_date(trunc(dbms_random.value(2458485,2458849)),'J'),?,?,?,?)");
+				PreparedStatement pstmt = oraCon.prepareStatement("insert into students (student_id, dept_id, name, sub_id,  day, mark1, mark2, mark3, mark4) values (?,?,?,?,to_date(trunc(dbms_random.value(2458485,2458849)),'J'),?,?,?,?)");
 				int i = 0;
 				while (i < 10000000) {
 					pstmt.setInt(1 , oraSequence.nextVal());
-					pstmt.setString(2, OraRandom.randomString(200));
-					pstmt.setString(3, OraRandom.randomString(3000));
+					pstmt.setInt(2, OraRandom.randomUniformInt(200));
+					pstmt.setString(3, OraRandom.randomString(30));
 					pstmt.setInt(4, OraRandom.randomUniformInt(500));
 					pstmt.setInt(5,  OraRandom.randomUniformInt(1600));
 					pstmt.setInt(6,  OraRandom.randomUniformInt(3200));
 					pstmt.setInt(7, OraRandom.randomUniformInt(4800));
 					pstmt.setInt(8,  OraRandom.randomUniformInt(6400));
-				///	pstmt.executeUpdate();
-					pstmt.addBatch();
+				pstmt.executeUpdate();
+				/*	pstmt.addBatch();
 					
 					if (i%10000 == 0) {
 						pstmt.executeBatch();
 						System.out.println("loaded " + oraSequence.getval());
-					}   
+					} */   
 					i++;
 				}
 				
