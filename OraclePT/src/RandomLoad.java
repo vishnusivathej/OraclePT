@@ -9,7 +9,7 @@ import java.util.concurrent.Executors;
 
 public class RandomLoad {
 	@SuppressWarnings("static-access")
-	void loadTable() throws InterruptedException {
+	void SessionCachedCursors() throws InterruptedException {
 		try {
 
 			ExecutorService asd = Executors.newFixedThreadPool(30);
