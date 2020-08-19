@@ -10,14 +10,14 @@ public class LoadLock {
 
 
 	void run() {
-		//CreateTable("Vishnu");
-		//CloneTable("Vishnu");
+	//	CreateTable("Vishnu");
+	//	CloneTable("Vishnu");
 		ExecutorService asd = Executors.newFixedThreadPool(30);
 		int i = 0;
-		while (i < 30) {
+		while (i < 60) {
 			asd.submit(new RunLoad());
 			i++;
-		}
+		} 
 	
 	}
 	class RunLoad implements Runnable{
@@ -29,7 +29,7 @@ public class LoadLock {
 				ResultSet rs;
 				int i = 0;
 				while (i < 1000000) {
-					String SQL = "select * from Vishnu" + OraRandom.randomUniformInt(19171) +" where t1 = ?";
+					String SQL = "select * from Vishnu" + OraRandom.randomSkewInt(33400) +" where t1 = ?";
 					pstmt =  oraCon.prepareStatement(SQL);
 					pstmt.setInt(1, OraRandom.randomUniformInt(1000));
 					rs = pstmt.executeQuery();
@@ -54,7 +54,7 @@ public class LoadLock {
 			Connection oraCon = DBConnection.getOraConn();
 			Statement stmt = oraCon.createStatement();
 			int i = 0;
-			while (i < 64000) {
+			while (i < 640000) {
 				String SQL = "create table " + tabName + i + "( t1 number primary key, t2 varchar2(20), t3 varchar2(20))";
 				stmt.execute(SQL);
 				SQL = "insert into " + tabName +i +" select * from "+tabName;
@@ -80,7 +80,7 @@ public class LoadLock {
 			SQL = "insert into " + tabName +" (t1, t2 ,t3) values (?,?,?)";
 			PreparedStatement pstmt = oraCon.prepareStatement(SQL);
 			int i = 1;
-			while (i < 1000) {
+			while (i < 100) {
 				pstmt.setInt(1, oraSequence.nextVal());
 				pstmt.setString(2, OraRandom.randomString(20));
 				pstmt.setString(3, OraRandom.randomString(20));

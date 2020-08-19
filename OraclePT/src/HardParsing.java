@@ -63,8 +63,9 @@ public class HardParsing {
 				while (rs.next()) {
 					MAXVALUE = rs.getInt(1);
 				}
+				MAXVALUE=MAXVALUE==0?12312:MAXVALUE;
 				rs.close();
-				SQL = "select * from hardparse where t1 = ?";
+				SQL = "select test(?) from dual";
 				PreparedStatement pstmt = oraCon.prepareStatement(SQL);
 				int i = 0 ;
 				while (i < 50000000) {
