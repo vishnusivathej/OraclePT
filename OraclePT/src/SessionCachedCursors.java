@@ -25,7 +25,7 @@ public class SessionCachedCursors {
 	void buildSQLs() {
 		String head = "select /*";
 		String tail = " */ * from students where student_id = ?";
-		for (int i = 0 ; i < 100; i++) {
+		for (int i = 0 ; i < 600; i++) {
 			String SQL = head + Integer.toBinaryString(i) + tail;
 			SQLs.add(SQL);
 		}

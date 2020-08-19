@@ -8,12 +8,12 @@ import java.util.concurrent.Executors;
 public class HardParsing {
 	
 	void runLoad(int NO_OF_THREADS) {
-		//CreateTable();
+		CreateTable();
 
 		ExecutorService asd = Executors.newFixedThreadPool(NO_OF_THREADS);
 		int i = 0;
 		while (i < NO_OF_THREADS) {
-			asd.submit(new RunSoftParseLoad());
+			asd.submit(new RunHardParseLoad());
 			i++;
 		}
 	

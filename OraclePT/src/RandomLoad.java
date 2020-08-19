@@ -9,12 +9,12 @@ import java.util.concurrent.Executors;
 
 public class RandomLoad {
 	@SuppressWarnings("static-access")
-	void SessionCachedCursors() throws InterruptedException {
+	void runLoad() throws InterruptedException {
 		try {
 
 			ExecutorService asd = Executors.newFixedThreadPool(30);
 			int i = 0;
-			while (i < 10) {
+			while (i < 50) {
 				asd.submit(new InsertLoad());
 				i++;
 			}
@@ -93,7 +93,7 @@ public class RandomLoad {
 				PreparedStatement pstmt = oraCon.prepareStatement("insert into students (student_id, dept_id, name, sub_id,  day, mark1, mark2, mark3, mark4) values (?,?,?,?,to_date(trunc(dbms_random.value(2458485,2458849)),'J'),?,?,?,?)");
 				int i = 0;
 				while (i < 10000000) {
-					pstmt.setInt(1 , oraSequence.nextVal());
+					pstmt.setInt(1 , oraSequence.nextVal()+30000000);
 					pstmt.setInt(2, OraRandom.randomUniformInt(200));
 					pstmt.setString(3, OraRandom.randomString(30));
 					pstmt.setInt(4, OraRandom.randomUniformInt(500));
@@ -101,13 +101,13 @@ public class RandomLoad {
 					pstmt.setInt(6,  OraRandom.randomUniformInt(3200));
 					pstmt.setInt(7, OraRandom.randomUniformInt(4800));
 					pstmt.setInt(8,  OraRandom.randomUniformInt(6400));
-				pstmt.executeUpdate();
-				/*	pstmt.addBatch();
+				//pstmt.executeUpdate();
+					pstmt.addBatch();
 					
 					if (i%10000 == 0) {
 						pstmt.executeBatch();
 						System.out.println("loaded " + oraSequence.getval());
-					} */   
+					}   
 					i++;
 				}
 				
@@ -193,21 +193,15 @@ public class RandomLoad {
 				   System.out.println(dtf.format(now));  
 				System.out.println("Staring Select  Thread -->" + Thread.currentThread().getName());
 				Connection oraCon = DBConnection.getOraConn();
-				Statement stmt = oraCon.createStatement();
-				String SQL = "select maX(student_id) from students";
-				int maxValue = 0;
-				ResultSet rs= stmt.executeQuery(SQL);
-				while (rs.next()) {
-					maxValue = rs.getInt(1);
-				}
+				
 			
-				PreparedStatement pstmt = oraCon.prepareStatement("select * from students where mark2 < ? order by mark2");
+				PreparedStatement pstmt = oraCon.prepareStatement("select * from students where student_id = ? ");
 				pstmt.setFetchSize(50000);
 				int i = 0;
 				
-					while (i < 1000) {
+					while (i < 1000000) {
 						pstmt.setInt(1, 4);
-						rs = pstmt.executeQuery();
+						ResultSet rs = pstmt.executeQuery();
 						while(rs.next()) {
 							rs.getInt(1);
 						}
