@@ -111,7 +111,7 @@ public class ClientResultCache {
 			pstmt.close();
 			stmt.close();
 			GatherStats a = new GatherStats("CLIENTCACHE");
-			a.run();
+			a.GatherStatsInvalidate();
 			oraCon.close();
 		}
 		catch(Exception E) {

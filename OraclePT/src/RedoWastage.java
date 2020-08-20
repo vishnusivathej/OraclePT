@@ -44,7 +44,7 @@ public class RedoWastage {
 				Connection oraCon = DBConnection.getOraConn();
 				PreparedStatement pstmt = oraCon.prepareStatement("insert into redowastage(roll, name) values (?,?)");
 				int i = 0;
-				while (i < 400) {
+				while (i < 2000) {
 					pstmt.setInt(1, oraSequence.nextVal());
 					pstmt.setString(2, OraRandom.randomString(30));
 					pstmt.executeUpdate(); 

@@ -2,7 +2,6 @@ import java.sql.Statement;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 public class SecondaryExecution {
@@ -18,36 +17,36 @@ public class SecondaryExecution {
 	}
 	
 	class FirstStatement implements Runnable{
-		@SuppressWarnings("static-access")
 		public void run() {
 			try {
 				Connection oraCon = DBConnection.getOraConn();
-				
-				String SQL = "select student_id from students where mark4=20";
-				String SQL2 =" select max(student_id) from students2";
 				Statement stmt1 = oraCon.createStatement();
-				Statement stmt2 = oraCon.createStatement();
-				PreparedStatement pstmt2 = oraCon.prepareStatement("select * from students2 where student_id = ?");
+				String SQL = "select student_id from students where mark4=20";
+				
+				String SQL2 = "select avg(mark1) from students2";
+				String SQL3 = "@";
+				Statement stmt2 = oraCon.prepareStatement(SQL3);
 				int i = 0;
-				ResultSet rs2 = stmt2.executeQuery(SQL2);
-				int maxvalue = 0;
-				while (rs2.next()) {
-					maxvalue = rs2.getInt(1);
-				}
-				ResultSet rs = stmt1.executeQuery(SQL);
-				ResultSet rs3;
-				while (rs.next()) {
-					
-					i++;
-					if (i%5==0) {
-						pstmt2.setInt(1, OraRandom.randomUniformInt(maxvalue));
-						rs3 = pstmt2.executeQuery();
-						while (rs3.next()) {
-							Thread.currentThread().sleep(1000);
+				ResultSet rs2;
+				Statement stmt3 = oraCon.createStatement();
+				int j = 0;
+				while (j < 1000000) {
+					ResultSet rs = stmt1.executeQuery(SQL);
+					rs.setFetchSize(4);
+					while (rs.next()) {
+						
+						rs2 = stmt3.executeQuery(SQL2);
+						while (rs2.next()) {
+							
 						}
+						rs2.close();
+						if (i%10==0) {
+							stmt2.execute(SQL3);
+						}
+						i++;
 					}
-					
-					
+					rs.close();
+					j++;
 				}
 			}
 			catch(Exception E) {

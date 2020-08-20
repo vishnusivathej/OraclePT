@@ -1,9 +1,9 @@
 
 public class Start {
-	
+	@SuppressWarnings("static-access")
 	public static void main(String[] args) throws InterruptedException  {
-		OpenCursor a = new OpenCursor();
-		a.run();
+		LibraryCacheComment a = new LibraryCacheComment();
+		a.runSequence(30);
 	}
 	
 }

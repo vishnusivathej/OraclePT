@@ -8,12 +8,12 @@ import java.util.concurrent.Executors;
 public class HardParsing {
 	
 	void runLoad(int NO_OF_THREADS) {
-		CreateTable();
+		//CreateTable();
 
 		ExecutorService asd = Executors.newFixedThreadPool(NO_OF_THREADS);
 		int i = 0;
 		while (i < NO_OF_THREADS) {
-			asd.submit(new RunHardParseLoad());
+			asd.submit(new RunSoftParseLoad());
 			i++;
 		}
 	
@@ -63,9 +63,8 @@ public class HardParsing {
 				while (rs.next()) {
 					MAXVALUE = rs.getInt(1);
 				}
-				MAXVALUE=MAXVALUE==0?12312:MAXVALUE;
 				rs.close();
-				SQL = "select test(?) from dual";
+				SQL = "select * from hardparse where t1 = ?";
 				PreparedStatement pstmt = oraCon.prepareStatement(SQL);
 				int i = 0 ;
 				while (i < 50000000) {

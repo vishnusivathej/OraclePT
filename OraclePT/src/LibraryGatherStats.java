@@ -26,7 +26,7 @@ public class LibraryGatherStats {
 	void GenerateSQL() {
 		int i = 0;
 		String temp = " * from students where student_id = ?";		
-		while (i < 3000 ) {
+		while (i < 600 ) {
 			SQL.add("select /* " + i +"*/ " + temp);
 			i++;
 		}
@@ -39,7 +39,7 @@ public class LibraryGatherStats {
 				int i = 0;
 				while (i < 10000) {
 					GatherStats a = new GatherStats("STUDENTS");
-					a.run();
+					
 					Thread.currentThread().sleep(1000);
 					i++;
 				}

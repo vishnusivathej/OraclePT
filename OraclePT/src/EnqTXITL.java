@@ -92,7 +92,7 @@ class EnqTXITL{
 			SQL = "create index students_idx on students(roll)";
 			stmt.execute(SQL);
 			GatherStats a = new GatherStats("STUDENTS");
-			a.run();
+			a.GatherStatsInvalidate();
 			SQL = "drop table temp";
 			stmt.execute(SQL);
 			stmt.close();
