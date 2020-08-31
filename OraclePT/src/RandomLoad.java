@@ -15,7 +15,7 @@ public class RandomLoad {
 			ExecutorService asd = Executors.newFixedThreadPool(30);
 			int i = 0;
 			while (i < 10) {
-				asd.submit(new InsertLoad());
+				asd.submit(new SelectLoad());
 				i++;
 			}
 			i = 0 ;
@@ -93,7 +93,7 @@ public class RandomLoad {
 				PreparedStatement pstmt = oraCon.prepareStatement("insert into students (student_id, dept_id, name, sub_id,  day, mark1, mark2, mark3, mark4) values (?,?,?,?,to_date(trunc(dbms_random.value(2458485,2458849)),'J'),?,?,?,?)");
 				int i = 0;
 				while (i < 10000000) {
-					pstmt.setInt(1 , oraSequence.nextVal());
+					pstmt.setInt(1 ,  oraSequence.nextVal());
 					pstmt.setInt(2, OraRandom.randomUniformInt(200));
 					pstmt.setString(3, OraRandom.randomString(30));
 					pstmt.setInt(4, OraRandom.randomUniformInt(500));
@@ -185,6 +185,7 @@ public class RandomLoad {
 		}
 	}
 	class SelectLoad implements Runnable{
+		@SuppressWarnings("static-access")
 		public void run() {
 			try {
 				 DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");  
@@ -192,23 +193,18 @@ public class RandomLoad {
 				   System.out.println(dtf.format(now));  
 				System.out.println("Staring Select  Thread -->" + Thread.currentThread().getName());
 				Connection oraCon = DBConnection.getOraConn();
-				Statement stmt = oraCon.createStatement();
-				String SQL = "select maX(student_id) from students";
-				int maxValue = 0;
-				ResultSet rs= stmt.executeQuery(SQL);
-				while (rs.next()) {
-					maxValue = rs.getInt(1);
-				}
-			
-				PreparedStatement pstmt = oraCon.prepareStatement("select * from students where mark2 < ? order by mark2");
-				pstmt.setFetchSize(50000);
-				int i = 0;
 				
-					while (i < 1000) {
-						pstmt.setInt(1, 4);
-						rs = pstmt.executeQuery();
+				PreparedStatement pstmt = oraCon.prepareStatement("select avg(mark1) from students where mark4=?");
+				int i = 0;
+				ResultSet rs;
+					while (i < 10000000) {
+						
+						pstmt.setInt(1,OraRandom.randomUniformInt(4));
+						//ptmt.setInt(2, 200);
+						rs =pstmt.executeQuery();
 						while(rs.next()) {
 							rs.getInt(1);
+							
 						}
 						i++;
 						rs.close();
