@@ -2,8 +2,9 @@
 public class Start {
 	@SuppressWarnings("static-access")
 	public static void main(String[] args) throws InterruptedException  {
-		MapToBlob a = new MapToBlob();
-		a.getMap();
+		RandomLoad a = new RandomLoad();
+		a.createTable();
+		a.loadTable();
 	}
 	
 }
