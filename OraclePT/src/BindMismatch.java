@@ -25,15 +25,14 @@ public class BindMismatch {
 		public void run() {
 			try {
 				Connection oraCon = DBConnection.getOraConn();				
-				String SQL = "select * from BindMisMatch where t5 in (?,?,?,?)";
+				String SQL = "select * from BindMisMatch where t4 in (?,?,?)";
 				PreparedStatement pstmt = oraCon.prepareStatement(SQL);
 				ResultSet rs;
 				int i = 0;
 				while (i < 10000000) {
 					setBind(pstmt, 1);
-					setBind(pstmt, 1);
-					setBind(pstmt, 1);
-					setBind(pstmt, 1);
+					setBind(pstmt, 2);
+					setBind(pstmt, 3);
 					rs = pstmt.executeQuery();
 					while(rs.next()) {
 						
@@ -49,22 +48,22 @@ public class BindMismatch {
 			try {
 				int temp = OraRandom.randomUniformInt(5);
 				if (temp==1) {
-					pstmt.setInt(val, OraRandom.randomUniformInt(120));
+					pstmt.setInt(val, OraRandom.randomUniformInt(100));
 				}
 				else if (temp == 2) {
-					pstmt.setLong(val, OraRandom.randomUniformInt(120));
+					pstmt.setLong(val, OraRandom.randomUniformInt(100));
 				}
 				else if (temp == 3) {
-					pstmt.setString(val,  Integer.toString(OraRandom.randomUniformInt(120)));
+					pstmt.setString(val,  Integer.toString(OraRandom.randomUniformInt(1000)));
 				}
 				else if (temp==4) {
-					pstmt.setNString(val, Integer.toString(OraRandom.randomUniformInt(120)));
+					pstmt.setNString(val, Integer.toString(OraRandom.randomUniformInt(1000)));
 				}
 				if (temp == 5) {
-					pstmt.setShort(val, Short.parseShort(Integer.toString(OraRandom.randomUniformInt(100))));
+					pstmt.setShort(val, Short.parseShort(Integer.toString(OraRandom.randomUniformInt(1000))));
 				}
 				else {
-					pstmt.setInt(val, OraRandom.randomUniformInt(120));
+					pstmt.setInt(val, OraRandom.randomUniformInt(1000));
 				}
 			}
 			catch(Exception E) {
@@ -91,12 +90,12 @@ public class BindMismatch {
 			SQL = "insert into BindMisMatch (t1, t2, t3, t4, t5) values (?,?,?,?,?)";
 			PreparedStatement pstmt = oraCon.prepareStatement(SQL);
 			int i = 0 ;
-			while (i < 30000) {
+			while (i < 3000000) {
 				pstmt.setInt(1, oraSequence.nextVal());
 				pstmt.setInt(2,  OraRandom.randomUniformInt(100));
 				pstmt.setInt(3,  OraRandom.randomUniformInt(1000));
 				pstmt.setInt(4,  OraRandom.randomUniformInt(10000));
-				pstmt.setInt(5,  OraRandom.randomUniformInt(340000));
+				pstmt.setInt(5,  OraRandom.randomUniformInt(1000));
 				pstmt.addBatch();
 				if (i%10000 == 0) {
 					pstmt.executeBatch();
