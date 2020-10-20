@@ -25,23 +25,46 @@ public class BindMismatch {
 		public void run() {
 			try {
 				Connection oraCon = DBConnection.getOraConn();				
-				String SQL = "select * from BindMisMatch where t5 like ?";
+				String SQL = "select * from BindMisMatch where t5 in (?,?,?,?)";
 				PreparedStatement pstmt = oraCon.prepareStatement(SQL);
 				ResultSet rs;
-				int j = 0;
-				while (j < 1000) {
-					int i = 3 ;
-					while (i < 200) {
-						String temp = OraRandom.randomBindString(i);
-						pstmt.setString(1, temp );
-						rs = pstmt.executeQuery();
-						while (rs.next()) {
-							
-						}
-						rs.close();
-						i= i + 1;
+				int i = 0;
+				while (i < 10000000) {
+					setBind(pstmt, 1);
+					setBind(pstmt, 1);
+					setBind(pstmt, 1);
+					setBind(pstmt, 1);
+					rs = pstmt.executeQuery();
+					while(rs.next()) {
+						
 					}
-					j++;
+					i++;
+				}
+			}
+			catch(Exception E) {
+				E.printStackTrace();
+			}
+		}
+		void setBind(PreparedStatement pstmt, int val) {
+			try {
+				int temp = OraRandom.randomUniformInt(5);
+				if (temp==1) {
+					pstmt.setInt(val, OraRandom.randomUniformInt(120));
+				}
+				else if (temp == 2) {
+					pstmt.setLong(val, OraRandom.randomUniformInt(120));
+				}
+				else if (temp == 3) {
+					pstmt.setString(val,  Integer.toString(OraRandom.randomUniformInt(120)));
+				}
+				else if (temp==4) {
+					pstmt.setNString(val, Integer.toString(OraRandom.randomUniformInt(120)));
+				}
+				if (temp == 5) {
+					pstmt.setShort(val, Short.parseShort(Integer.toString(OraRandom.randomUniformInt(100))));
+				}
+				else {
+					pstmt.setInt(val, OraRandom.randomUniformInt(120));
 				}
 			}
 			catch(Exception E) {
@@ -61,7 +84,7 @@ public class BindMismatch {
 			catch(Exception E) {
 				E.printStackTrace();
 			}
-			 SQL = "create table BindMisMatch(t1 number primary key, t2 number, t3 number, t4 number, t5 varchar2(3400))";
+			 SQL = "create table BindMisMatch(t1 number primary key, t2 number, t3 number, t4 number, t5 number)";
 			stmt.execute(SQL);
 			SQL = "create index t5_idx on BindMisMatch(t5)";
 			stmt.execute(SQL);
@@ -73,7 +96,7 @@ public class BindMismatch {
 				pstmt.setInt(2,  OraRandom.randomUniformInt(100));
 				pstmt.setInt(3,  OraRandom.randomUniformInt(1000));
 				pstmt.setInt(4,  OraRandom.randomUniformInt(10000));
-				pstmt.setString(5,  OraRandom.randomString(3400));
+				pstmt.setInt(5,  OraRandom.randomUniformInt(340000));
 				pstmt.addBatch();
 				if (i%10000 == 0) {
 					pstmt.executeBatch();
