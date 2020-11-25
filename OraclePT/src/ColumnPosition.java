@@ -2,6 +2,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -40,11 +42,13 @@ public class ColumnPosition {
 			try {
 				Connection oraCon = DBConnection.getOraConn();
 				Statement stmt = oraCon.createStatement();
-				String SQL = "select t2 from Column_position where t0 < 1023";
+				String SQL = "select avg(t2) from Column_position where t0 < 512";
+				  DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");  
+				   LocalDateTime now = LocalDateTime.now();  
+				   System.out.println(dtf.format(now));  
 				int i = 0 ;
-				while (i < 10000000) {
+				while (i < 2000) {
 					ResultSet rs = stmt.executeQuery(SQL);
-					rs.setFetchSize(300);
 
 					while (rs.next()) {
 						
@@ -52,6 +56,9 @@ public class ColumnPosition {
 					
 					i++;
 				}
+				   dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");  
+				    now = LocalDateTime.now();  
+				   System.out.println(dtf.format(now));  
 			}
 			catch(Exception E) {
 				E.printStackTrace();
@@ -63,17 +70,22 @@ public class ColumnPosition {
 			try {
 				Connection oraCon = DBConnection.getOraConn();
 				Statement stmt = oraCon.createStatement();
-				String SQL = "select t234 from Column_position where t0 < 1023";
+				String SQL = "select avg(t234) from Column_position where t0 < 512";
 				int i = 0 ;
-				while (i < 10000000) {
+				  DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");  
+				   LocalDateTime now = LocalDateTime.now();  
+				   System.out.println(dtf.format(now));  
+				while (i < 2000) {
 					ResultSet rs = stmt.executeQuery(SQL);
-					rs.setFetchSize(300);
 					while (rs.next()) {
 						
 					}
 					
 					i++;
 				}
+				   dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");  
+				    now = LocalDateTime.now();  
+				   System.out.println(dtf.format(now));  
 			}
 			catch(Exception E) {
 				E.printStackTrace();

@@ -100,7 +100,7 @@ public class RandomLoad {
 					pstmt.setInt(5,  OraRandom.randomUniformInt(1600));
 					pstmt.setInt(6,  OraRandom.randomUniformInt(3200));
 					pstmt.setInt(7, OraRandom.randomUniformInt(4800));
-					pstmt.setInt(8,  OraRandom.randomUniformInt(6400));
+					pstmt.setInt(8,  Math.abs(oraSequence.getval()/2000));
 				//	pstmt.executeUpdate();
 					pstmt.addBatch();
 					
