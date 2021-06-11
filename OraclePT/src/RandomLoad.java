@@ -70,7 +70,7 @@ public class RandomLoad {
 			catch(Exception E) {
 				
 			}
-			String SQL = "  create table students(student_id number primary key , dept_id number, name varchar2(30) not null, sub_id number, day date, mark1 number, mark2 number, mark3 number, mark4 number)";
+			String SQL = "  create table students(student_id number  , dept_id number, name varchar2(30) not null, sub_id number, day date, mark1 number, mark2 number, mark3 number, mark4 number)";
 			stmt.execute(SQL);
 		//	SQL = "create index name on students(name)";
 		//	stmt.execute(SQL);
